@@ -17,7 +17,7 @@ def main():
     port = 1883
     keepalive = 60
 
-    topic = f"WildCard/{randint(1000, 9999)}"
+    topic = "SensorTemp"
 
     client = mqtt.Client()
 

@@ -29,13 +29,13 @@ def on_publish(client, obj, mid):
 
 
 def main():
-    args, unkown = arg_parse()
+    args, unkown = arg_parse()  # --help for arguments
     host = "mqtt.eclipseprojects.io"
     port = 1883
     keepalive = 60
     client_id = "1000" if args.disable_clean_session else None
 
-    topic = ("Sensor/Temp", 1)
+    topic = ("Sensor/Temp", args.qos)
 
     client = mqtt.Client(client_id,
                          clean_session=not args.disable_clean_session)
@@ -52,8 +52,8 @@ def main():
     client.connect(host, port, keepalive)
 
     client.loop_start()  # Free up main thread
-
-    time.sleep(3)  # Give client time to connect and subscribe
+    time.sleep(1)  # Give client time to connect and subscribe
+    client.loop_stop()
 
     client.disconnect()
 
@@ -62,9 +62,12 @@ def main():
     print("Connecting to " + host + " port: " + str(port))
     client.connect(host, port, keepalive)
 
+    # client.loop_forever()
     client.loop_start()
+    time.sleep(1)  # Give client time to connect and subscribe
+    client.loop_stop()
 
-    time.sleep(3)
+    client.disconnect()
 
 
 def publish_20_msgs(host, port, keepalive=60, topic=("Sensor/Temp", 1)):
@@ -75,6 +78,7 @@ def publish_20_msgs(host, port, keepalive=60, topic=("Sensor/Temp", 1)):
 def arg_parse() -> tuple:
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--disable-clean-session', action='store_true', help="disable 'clean session' (sub + msgs not cleared when client disconnects)")
+    parser.add_argument('-q', '--qos', required=False, type=int, default=1, help="Quality of Service(QoS), 0='At most once delivery', 1='At least once delivery', 2='Exactly once delivery'")
 
     return parser.parse_known_args()
 
