@@ -71,7 +71,7 @@ def main():
 
 
 def publish_20_msgs(host, port, keepalive=60, topic=("Sensor/Temp", 1)):
-    msgs = iter([(topic[0], f"Message: {i}", topic[1]) for i in range(0, 20)])
+    msgs = [(topic[0], f"Message: {i}", topic[1]) for i in range(0, 20)]
     publish.multiple(msgs, host, port, "", keepalive)  # Error can be ignored
 
 
