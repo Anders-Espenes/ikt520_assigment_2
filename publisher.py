@@ -37,6 +37,7 @@ def main():
     client.disconnect()
 
     publish_single_example()
+    publish_multi_example()
 
 
 def publish_single_example():
@@ -52,6 +53,19 @@ def publish_single_example():
     ]
     publish.multiple(msgs, host, port, "", keepalive)
 
+
+def publish_multi_example():
+    host = "mqtt.eclipseprojects.io"
+    port = 1883
+    keepalive = 60
+
+    msgs = [
+        (f"WildCardMulti/{randint(1000,9999)}", "Match", 1),
+        ("WildCardMulti/", "Match", 1),
+        ("WildCardMulti", "Match", 1),
+        (f"WildCardMulti/{randint(1000,9999)}/blarg", "Match", 1)
+    ]
+    publish.multiple(msgs, host, port, "", keepalive)
 
 
 if __name__ == "__main__":
